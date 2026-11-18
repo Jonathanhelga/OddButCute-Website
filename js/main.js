@@ -3,7 +3,8 @@ import {selection} from "./state.js";
 import {addToOrder, choose, renderCategories, renderOptions, selectCategory, setModel, stepPicked, stepQty, updateAddButton} from "./picker.js";
 import {removeFromCart, renderCart, stepCartQty} from "./cart.js";
 import {loadCustomer, saveCustomer} from "./customer.js";
-import {editOrder, showReview} from "./checkout.js";
+import {editOrder, showReview, submitOrder} from "./checkout.js";
+import {applyBranding} from "./branding.js";
 
 const STEPS = {qty: (index, delta) => stepQty(delta), pick: stepPicked, cart: stepCartQty};
 
@@ -19,6 +20,8 @@ document.addEventListener("click", event => {
   else if (button.id === "add") {addToOrder();}
   else if (button.id === "review-order") {showReview();}
   else if (button.id === "edit-order") {editOrder();}
+  else if (button.id === "submit-order") {submitOrder();}
+  else if (button.id === "new-order") {location.reload();}
 });
 
 document.addEventListener("change", event => {
@@ -37,6 +40,7 @@ document.addEventListener("input", event => {
   updateAddButton();
 });
 
+applyBranding();
 loadCustomer();
 renderCategories();
 renderOptions();

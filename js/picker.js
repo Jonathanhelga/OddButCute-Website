@@ -1,5 +1,6 @@
 // Step 1: choosing a category, its design and options, then adding it to the order.
-import {CATALOG_URL, CATEGORIES, DESIGNS, FRAME_COLOURS, IPHONE_MODELS, MATERIALS, MAX_QTY, MAX_QTY_AFTER_MERGE, OTHER_IPHONE, PREMIUM_FIRST_MODEL, STANDARD_CASE_PRICE} from "./config.js";
+import {CATEGORIES, DESIGNS, FRAME_COLOURS, IPHONE_MODELS, MATERIALS, MAX_QTY, MAX_QTY_AFTER_MERGE, OTHER_IPHONE, PREMIUM_FIRST_MODEL, STANDARD_CASE_PRICE} from "./config.js";
+import {SETTINGS} from "./settings.js";
 import {cart, selection} from "./state.js";
 import {bundleCost, caseFromPrice, casePrice, findMaterial, premiumFromPrice, qtyInCart} from "./pricing.js";
 import {stepper, thumbnail} from "./components.js";
@@ -56,8 +57,7 @@ function caseOptionsHtml() {
   const models = premium ? IPHONE_MODELS.slice(IPHONE_MODELS.indexOf(PREMIUM_FIRST_MODEL)) : IPHONE_MODELS;
   if (!models.includes(s.model)) {s.model = "";}
 
-  let html = `<div class="f" id="f-design"><label>Design ${REQUIRED}</label><input id="design" placeholder="Type the design name or code from our catalog" value="${escapeHtml(s.caseDesign)}"><small class="e">Please type the design you want.</small></div>`;
-  html += `<a class="btn alt catalog-link" href="${CATALOG_URL}" target="_blank" rel="noopener">🌸 See our catalog</a>`;
+  let html = `<div class="f" id="f-design"><label>Design Number/Name ${REQUIRED} <span class="muted">(name or code)</span></label><div class="with-btn"><input id="design" placeholder="Not sure? Tap Catalog →" value="${escapeHtml(s.caseDesign)}"><a class="btn alt" href="${SETTINGS.catalogUrl}" target="_blank" rel="noopener">🌸 Catalog</a></div><small class="e">Please type the design you want.</small></div>`;
   const tiers = [{value: "Standard", picClass: "pic-standard", img: "case-standard", price: formatIdr(STANDARD_CASE_PRICE)}, {value: "Premium", picClass: "", img: "case-premium", price: "from " + formatIdr(premiumFromPrice())}];
   html += choiceGroup("pick-tier", "Case type", "tier", tiers.map(t => ({value: t.value, html: `<img class="pic tier-pic ${t.picClass}" src="assets/products/${t.img}.jpg" alt="">${t.value} case<small>${t.price}</small>`})));
   if (!s.tier) {return html;}
@@ -179,15 +179,14 @@ function showMissing({id, message}) {
   el.closest(".f")?.classList.add("bad");
 }
 
-// e.g. "Premium · Glossy Glass · MagSafe · iPhone 15 Pro · Silver frame"
-function caseDetail() {
-  const s = selection, premium = s.tier === "Premium", parts = [s.tier];
-  if (premium) {parts.push(s.material);}
-  if (premium && findMaterial(s.material).magsafePrice) {parts.push(s.magsafe);}
-  parts.push((s.os === "Android" ? "Android " : "") + (isOtherModel() ? s.otherModel.trim() : s.model));
-  parts.push((premium ? s.frame : "Black") + " frame");
-  return parts.join(" · ");
+// The phone case choices as separate values, one per column in the Items table. "" means the choice does not apply.
+function caseAttrs() {
+  const s = selection, premium = s.tier === "Premium";
+  return {caseType: s.tier, material: premium ? s.material : "", magsafe: premium && findMaterial(s.material).magsafePrice ? s.magsafe : "", phoneType: s.os, model: isOtherModel() ? s.otherModel.trim() : s.model, frame: premium ? s.frame : "Black"};
 }
+
+// e.g. "Premium · Glossy Glass · MagSafe · iPhone 15 Pro · Silver frame"
+const caseDetail = a => [a.caseType, a.material, a.magsafe, (a.phoneType === "Android" ? "Android " : "") + a.model, a.frame + " frame"].filter(Boolean).join(" · ");
 
 // Adds a line to the cart, or raises the quantity of the same line if it is already there.
 function addLine(line, maxQty) {
@@ -195,6 +194,15 @@ function addLine(line, maxQty) {
   const existing = cart.find(item => item.key === key);
   if (existing) {existing.qty = Math.min(maxQty, existing.qty + line.qty);}
   else {cart.push({...line, key});}
+}
+
+const BLANK_CASE = {caseDesign: "", tier: "", material: "", magsafe: "", os: "", model: "", otherModel: "", frame: ""};
+
+// After "Add to order": the choice goes back to blank, so the next item starts fresh.
+function clearSelection(key) {
+  selection.qty = 1;
+  selection.designIndex = 0;
+  if (key === "case") {Object.assign(selection, BLANK_CASE);}
 }
 
 function afterAdd() {
@@ -209,13 +217,14 @@ export function addToOrder() {
   if (key === "case") {
     const missing = missingCaseChoice();
     if (missing) {showMissing(missing); return;}
-    addLine({category: key, name: c.name + " – " + selection.caseDesign.trim(), detail: caseDetail(), img: "assets/products/case.jpg", price: casePrice(), qty: selection.qty}, MAX_QTY);
+    const attrs = caseAttrs(), design = selection.caseDesign.trim();
+    addLine({category: key, product: c.name, design, attrs, name: c.name + " – " + design, detail: caseDetail(attrs), img: "assets/products/case.jpg", price: casePrice(), qty: selection.qty}, MAX_QTY);
   }
   else {
     const design = DESIGNS[key][selection.designIndex];
-    addLine({category: key, name: c.name + " – " + design.name, detail: "", img: designImage(key, design), imageFit: c.imageFit, price: c.price, qty: selection.qty}, MAX_QTY);
+    addLine({category: key, product: c.name, design: design.name, attrs: {}, name: c.name + " – " + design.name, detail: "", img: designImage(key, design), imageFit: c.imageFit, price: c.price, qty: selection.qty}, MAX_QTY);
   }
-  selection.qty = 1;
+  clearSelection(key);
   afterAdd();
 }
 
@@ -226,7 +235,7 @@ function addPicked() {
   if (inCart + n < c.min) {toast(`${c.name}s: minimum buy ${c.min}. Add ${c.min - inCart - n} more.`); return;}
   for (const [i, qty] of Object.entries(pickedFor(key))) {
     const design = DESIGNS[key][i];
-    addLine({category: key, name: c.name + " – " + design.name, detail: "", img: designImage(key, design), imageFit: c.imageFit, price: c.price, qty}, MAX_QTY_AFTER_MERGE);
+    addLine({category: key, product: c.name, design: design.name, attrs: {}, name: c.name + " – " + design.name, detail: "", img: designImage(key, design), imageFit: c.imageFit, price: c.price, qty}, MAX_QTY_AFTER_MERGE);
   }
   selection.pickedQty[key] = {};
   afterAdd();

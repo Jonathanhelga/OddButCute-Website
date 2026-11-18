@@ -1,12 +1,4 @@
-// Shop settings. Edit products, designs, prices and links here.
-
-export const CATALOG_URL = "https://drive.google.com/drive/folders/1oqHbyfZ8SgtWpc3bc_q9kBFKXDC4E2LQ";
-
-// The Google Form that receives orders. Each field value is the form question's entry ID.
-export const GOOGLE_FORM = {
-  url: "https://docs.google.com/forms/d/e/1FAIpQLSeSIiyybds034qJPr1MgITzcZ2VnqPKm7ERgDRo4BkMiAstjQ/viewform",
-  fields: {id: "1773519398", name: "2098529442", phone: "1888388137", email: "479180813", ig: "340134715", items: "592797559", total: "1500851931"},
-};
+// Products, designs and prices. Account details (links, shop name, order prefix) are in settings.js.
 
 // pickMany: the customer picks a quantity per design, instead of one design at a time.
 // bundle: buying `size` pieces costs `price` instead of `size` times the single price.

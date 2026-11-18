@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>odd but cute — Order Form</title>
+<title>Order Form</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <script type="module" src="js/main.js"></script>
@@ -11,7 +11,7 @@
 <body>
 <main>
 <header>
- <div class="brand"><img src="assets/logo.png" width="420" height="363" alt="odd but cute logo"></div>
+ <div class="brand"><img src="assets/logo.png" width="420" height="363" alt="logo"></div>
  <h1>Kinda chic to make <span>cute things</span></h1>
  <div class="stars">★ ★ ★</div>
  <p>Pick your goodies, fill in your details, and send the order to us. It takes about 2 minutes.</p>
@@ -55,16 +55,26 @@
  <p class="note not-submitted">Your order is <b>not submitted yet</b>. Pay first, then submit your order with your payment screenshot.</p>
  <div class="hint"><b>Step 1: Pay with QRIS</b>
   <p class="note">Total to pay: <b class="pay-total" id="pay-total"></b> (shipping not included; we will email you the shipping confirmation once your item is ready to ship).</p>
-  <img class="qris" src="assets/qris.png" width="900" height="900" loading="lazy" alt="QRIS payment code for Odd.But.Cute">
+  <img class="qris" src="assets/qris.png" width="900" height="900" loading="lazy" alt="QRIS payment code">
   <p class="note center">Tip: screenshot this QR code and scan it from your gallery.</p>
  </div>
  <div class="hint"><b>Step 2: Submit your order</b>
-  <p class="note">After paying, tap the button below. A form opens with your order details already filled in. Upload your payment screenshot and tap Submit once. That is the last step. Google may ask you to sign in before you can upload a file.</p>
-  <a class="btn big form-link" id="form-link" target="_blank" rel="noopener">I've paid, submit my order</a>
+  <p class="note">After paying, upload your payment screenshot and tap the button below. That is the last step.</p>
+  <div class="f" id="f-screenshot"><label>Payment screenshot <i>*</i></label><input id="screenshot" type="file" accept="image/*"><small class="e">Please choose your payment screenshot.</small></div>
+  <input class="hp" id="hp-note" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <button class="btn big submit-button" id="submit-order">I've paid, submit my order</button>
+  <p class="note error" id="submit-error" hidden></p>
+  <div id="fallback" hidden><p class="note">Still not working? Submit through our Google Form instead. Google may ask you to sign in before you can upload a file.</p><a class="btn alt big form-link" id="form-link" target="_blank" rel="noopener">Open the Google Form</a></div>
  </div>
  <div class="acts"><button class="btn alt" id="edit-order">← Edit my order</button></div>
 </section>
-<footer>made with ♡ by odd but cute · @odd.but.cute</footer>
+<section id="done">
+ <h2>♡ Order submitted</h2>
+ <p class="order-id-line">Order ID <span class="oid" id="done-id"></span></p>
+ <p class="note">We received your order and payment screenshot. We will check your payment and email you the shipping confirmation once your item is ready to ship.</p>
+ <div class="acts"><button class="btn alt" id="new-order">Start a new order</button></div>
+</section>
+<footer></footer>
 </main>
 <div id="toast"></div>
 </body>
