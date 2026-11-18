@@ -8,7 +8,7 @@ export const SETTINGS = {
   orderPrefix: "OBC",
 
   // The Apps Script web app that receives orders (writes Sheet rows and saves the screenshot to Drive). Source: apps-script/Code.gs.
-  appsScriptUrl: "https://script.google.com/macros/s/AKfycbzx-YW6zNNJURcxKEAGqZGt1TlqCz-o7AJf31yY2_SsmAuG391O8H-3AzV0I5AtL8XA/exec",
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycbxYRTKgE8nnAMbOAizntk75l0Ix_R3dKS43_5-JhJncZQSOqk4xJjpzP2H6lIGPWteE/exec",
 
   // A Drive folder (shared as "Anyone with the link can view") that the "Catalog" button opens.
   catalogUrl: "https://drive.google.com/drive/folders/1oqHbyfZ8SgtWpc3bc_q9kBFKXDC4E2LQ",
