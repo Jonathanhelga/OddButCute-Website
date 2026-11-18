@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>odd but cute — Order Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script type="module" src="js/main.js"></script>
+</head>
+<body>
+<main>
+<header>
+ <div class="brand"><img src="assets/logo.png" width="420" height="363" alt="odd but cute logo"></div>
+ <h1>Kinda chic to make <span>cute things</span></h1>
+ <div class="stars">★ ★ ★</div>
+ <p>Pick your goodies, fill in your details, and send the order to us. It takes about 2 minutes.</p>
+</header>
+
+<section class="order-step" id="step-item">
+ <h2><b>1</b> Choose your item</h2>
+ <div class="chips" id="categories"></div>
+ <div id="options"></div>
+</section>
+
+<section class="order-step" id="step-order">
+ <h2><b>2</b> Your order <span class="count" id="cart-count"></span></h2>
+ <ul class="cart" id="cart"></ul>
+ <p class="note discount" id="cart-discount"></p>
+ <div class="tot"><span>Grand total</span><span id="cart-total">IDR 0</span></div>
+ <p class="note">Shipping is not included. We will email you the shipping confirmation once your item is ready to ship.</p>
+ <div class="f" id="f-cart"><small class="e">Add at least one item to your order.</small></div>
+</section>
+
+<section class="order-step" id="step-details">
+ <h2><b>3</b> Your details</h2>
+ <div class="f" id="f-name"><label>Your name <i>*</i></label><input id="name" autocomplete="name" placeholder="e.g. Aulia Putri"><small class="e">Please enter your name.</small></div>
+ <div class="two">
+  <div class="f" id="f-phone"><label>WhatsApp number <i>*</i></label><input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="08xx xxxx xxxx"><small class="e">Enter a valid phone number.</small></div>
+  <div class="f"><label>Instagram (optional)</label><input id="ig" placeholder="@username"></div>
+ </div>
+ <div class="f" id="f-email"><label>Email <i>*</i></label><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com"><small class="e">Enter a valid email address.</small><p class="note">We will email you the shipping confirmation here.</p></div>
+</section>
+
+<section class="order-step" id="step-payment">
+ <h2><b>4</b> Payment</h2>
+ <div class="f"><label>Payment method</label><input id="pay" value="QRIS" readonly><p class="note">We accept QRIS payment only. The QRIS code appears on the next page, after you review your order.</p></div>
+ <div class="hint">On the next page you will pay with QRIS, then submit your order with your payment screenshot. Shipping is not included in the total: we will email you the shipping confirmation once your item is ready to ship. Your order is confirmed once payment is received.</div>
+ <button class="btn big review-button" id="review-order">Review order &amp; pay ♡</button>
+</section>
+
+<section id="review">
+ <h2>✨ Almost done!</h2>
+ <p class="order-id-line">Order ID <span class="oid" id="order-id"></span></p>
+ <p class="note not-submitted">Your order is <b>not submitted yet</b>. Pay first, then submit your order with your payment screenshot.</p>
+ <div class="hint"><b>Step 1: Pay with QRIS</b>
+  <p class="note">Total to pay: <b class="pay-total" id="pay-total"></b> (shipping not included; we will email you the shipping confirmation once your item is ready to ship).</p>
+  <img class="qris" src="assets/qris.png" width="900" height="900" loading="lazy" alt="QRIS payment code for Odd.But.Cute">
+  <p class="note center">Tip: screenshot this QR code and scan it from your gallery.</p>
+ </div>
+ <div class="hint"><b>Step 2: Submit your order</b>
+  <p class="note">After paying, tap the button below. A form opens with your order details already filled in. Upload your payment screenshot and tap Submit once. That is the last step. Google may ask you to sign in before you can upload a file.</p>
+  <a class="btn big form-link" id="form-link" target="_blank" rel="noopener">I've paid, submit my order</a>
+ </div>
+ <div class="acts"><button class="btn alt" id="edit-order">← Edit my order</button></div>
+</section>
+<footer>made with ♡ by odd but cute · @odd.but.cute</footer>
+</main>
+<div id="toast"></div>
+</body>
+</html>
